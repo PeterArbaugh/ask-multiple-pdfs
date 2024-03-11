@@ -55,13 +55,21 @@ def handle_userinput(user_question):
     response = st.session_state.conversation({'question': user_question})
     st.session_state.chat_history = response['chat_history']
 
+    # for i, message in enumerate(st.session_state.chat_history):
+    #     if i % 2 == 0:
+    #         st.write(user_template.replace(
+    #             "{{MSG}}", message.content), unsafe_allow_html=True)
+    #     else:
+    #         st.write(bot_template.replace(
+    #             "{{MSG}}", message.content), unsafe_allow_html=True)
+
     for i, message in enumerate(st.session_state.chat_history):
         if i % 2 == 0:
-            st.write(user_template.replace(
-                "{{MSG}}", message.content), unsafe_allow_html=True)
+            with st.chat_message("user"):
+                st.markdown(message.content)
         else:
-            st.write(bot_template.replace(
-                "{{MSG}}", message.content), unsafe_allow_html=True)
+            with st.chat_message("assistant"):
+                st.write(message.content)
 
 
 def main():
@@ -76,7 +84,7 @@ def main():
         st.session_state.chat_history = None
 
     st.header("Chat with multiple PDFs :books:")
-    user_question = st.text_input("Ask a question about your documents:")
+    user_question = st.chat_input("Ask a question about your documents:")
     if user_question:
         handle_userinput(user_question)
 
