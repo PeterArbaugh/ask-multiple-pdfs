@@ -62,14 +62,6 @@ def handle_userinput(user_question):
     response = st.session_state.conversation({'question': user_question})
     st.session_state.chat_history = response['chat_history']
 
-    # for i, message in enumerate(st.session_state.chat_history):
-    #     if i % 2 == 0:
-    #         st.write(user_template.replace(
-    #             "{{MSG}}", message.content), unsafe_allow_html=True)
-    #     else:
-    #         st.write(bot_template.replace(
-    #             "{{MSG}}", message.content), unsafe_allow_html=True)
-
     for i, message in enumerate(st.session_state.chat_history):
         if i % 2 == 0:
             with st.chat_message("user"):
@@ -93,7 +85,8 @@ def main():
     st.header("Chat with multiple PDFs :books:")
     user_question = st.chat_input("Ask a question about your documents:")
     if user_question:
-        handle_userinput(user_question)
+        with st.spinner("Processing..."):
+            handle_userinput(user_question)
 
     with st.sidebar:
         st.subheader("Your documents")
@@ -113,7 +106,6 @@ def main():
                 # create conversation chain
                 st.session_state.conversation = get_conversation_chain(
                     vectorstore)
-
 
 if __name__ == '__main__':
     main()
